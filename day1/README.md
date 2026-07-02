@@ -234,5 +234,40 @@ sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin dock
 
 ```
 apt  install  python3-venv python3-pip python3-docker 
+```
+
+### Node1 installing ansible and related details 
 
 ```
+python3 -m  venv  ~/openstack-setup
+root@node1:~# ls
+openstack-setup  snap
+root@node1:~# 
+
+root@node1:~# source  openstack-setup/bin/activate
+(openstack-setup) root@node1:~# 
+(openstack-setup) root@node1:~# 
+(openstack-setup) root@node1:~# pip install  -U pip setupstools wheel 
+Requirement already satisfied: pip in ./openstack-setup/lib/python3.10/site-packages (22.0.2)
+Collecting pip
+  Downloading pip-26.1.2-py3-none-any.whl (1.8 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.8/1.8 MB 14.4 MB/s eta 0:00:00
+ERROR: Could not find a version that satisfies the requirement setupstools (from versions: none)
+ERROR: No matching distribution found for setupstools
+(openstack-setup) root@node1:~# pip install  -U pip setuptools wheel 
+Requirement already satisfied: pip in ./openstack-setup/lib/python3.10/site-packages (22.0.2)
+Collecting pip
+  Using cached pip-26.1.2-py3-none-any.whl (1.8 MB)
+Requirement already satisfied: setuptools in ./openstack-setup/lib/python3.10/site-packages (59.6.0)
+Collecting setuptools
+  Downloading setuptools-82.0.1-py3-none-any.whl (1.0 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.0/1.0 MB 10.5 MB/s eta 0:00:00
+Collecting wheel
+
+
+===>
+
+pip install  "ansible-core>=2.13,<2.14"
+pip install  "kolla-ansible==15.*"
+```
+
