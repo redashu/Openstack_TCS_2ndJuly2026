@@ -195,3 +195,9 @@ root@node1:/etc/netplan# ping node3
 PING node3 (10.0.19.78) 56(84) bytes of data.
 
 ```
+
+### Install chrony software to match time of all the VM 
+
+```
+apt install chrony 
+```
