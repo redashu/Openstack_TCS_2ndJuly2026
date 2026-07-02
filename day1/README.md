@@ -157,3 +157,41 @@ network:
 root@node1:/etc/netplan# netplan  apply 
 WARNING:root:Cannot call Open vSwitch: ovsdb-server.service is not running.
 ```
+
+### iN node1 making hostname based local DNS entry 
+
+```
+root@node1:/etc/netplan# nano  /etc/hosts 
+root@node1:/etc/netplan# cat /etc/hosts
+127.0.0.1 localhost
+127.0.1.1 student
+
+# The following lines are desirable for IPv6 capable hosts
+::1     ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+
+10.0.19.76  node1
+10.0.19.77  node2
+10.0.19.78  node3
+root@node1:/etc/netplan# ping node1
+PING node1 (10.0.19.76) 56(84) bytes of data.
+64 bytes from node1 (10.0.19.76): icmp_seq=1 ttl=64 time=0.020 ms
+^C
+--- node1 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.020/0.020/0.020/0.000 ms
+root@node1:/etc/netplan# ping node2
+PING node2 (10.0.19.77) 56(84) bytes of data.
+64 bytes from node2 (10.0.19.77): icmp_seq=1 ttl=64 time=0.435 ms
+64 bytes from node2 (10.0.19.77): icmp_seq=2 ttl=64 time=0.449 ms
+^C
+--- node2 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1022ms
+rtt min/avg/max/mdev = 0.435/0.442/0.449/0.007 ms
+root@node1:/etc/netplan# ping node3
+PING node3 (10.0.19.78) 56(84) bytes of data.
+
+```
