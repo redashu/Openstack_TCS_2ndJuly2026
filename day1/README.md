@@ -49,3 +49,111 @@ Building dependency tree... Done
 Reading state information... Done
 
 ```
+
+### setting hostname permanently 
+
+```
+oot@student:~# hostname
+student
+root@student:~# hostnamectl set-hostname node1
+root@student:~# exit
+logout
+student@student:~$ sudo -i
+root@node1:~# hostname
+node1
+root@node1:~# 
+
+```
+
+### Node1 and Node2 are having 2 NIC 
+
+```
+root@node1:~# ifconfig
+ens18: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 10.0.19.76  netmask 255.0.0.0  broadcast 10.255.255.255
+        inet6 fe80::be24:11ff:fef9:b735  prefixlen 64  scopeid 0x20<link>
+        ether bc:24:11:f9:b7:35  txqueuelen 1000  (Ethernet)
+        RX packets 35911  bytes 29222088 (29.2 MB)
+        RX errors 0  dropped 4182  overruns 0  frame 0
+        TX packets 2198  bytes 237056 (237.0 KB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet 127.0.0.1  netmask 255.0.0.0
+        inet6 ::1  prefixlen 128  scopeid 0x10<host>
+        loop  txqueuelen 1000  (Local Loopback)
+        RX packets 130  bytes 11713 (11.7 KB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 130  bytes 11713 (11.7 KB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+root@node1:~# ifconfig -a
+ens18: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 10.0.19.76  netmask 255.0.0.0  broadcast 10.255.255.255
+        inet6 fe80::be24:11ff:fef9:b735  prefixlen 64  scopeid 0x20<link>
+        ether bc:24:11:f9:b7:35  txqueuelen 1000  (Ethernet)
+        RX packets 36030  bytes 29234095 (29.2 MB)
+        RX errors 0  dropped 4211  overruns 0  frame 0
+        TX packets 2205  bytes 238926 (238.9 KB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+ens19: flags=4098<BROADCAST,MULTICAST>  mtu 1500
+        ether bc:24:11:52:1f:3b  txqueuelen 1000  (Ethernet)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+
+```
+
+### static IP details for vm1
+
+```
+oot@node1:~# cd  /etc/netplan/
+root@node1:/etc/netplan# ls
+01-netcfg.  01-netcfg.yaml  50-cloud-init.yaml
+root@node1:/etc/netplan# cat 01-netcfg.yaml 
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    ens18:
+      dhcp4: no
+      addresses:
+        - 10.0.19.76/8
+      routes:
+        - to: default
+          via: 10.0.0.2
+      nameservers:
+        addresses:
+          - 8.8.8.8
+          - 8.8.4.4
+root@node1:/etc/netplan# 
+
+
+===> change this file and test again 
+
+root@node1:/etc/netplan# cat  01-netcfg.yaml 
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    ens19:
+      dhcp4: no
+      dhcp6: no
+    ens18:
+      dhcp4: no
+      addresses:
+        - 10.0.19.76/8
+      routes:
+        - to: default
+          via: 10.0.0.2
+      nameservers:
+        addresses:
+          - 8.8.8.8
+          - 8.8.4.4
+root@node1:/etc/netplan# netplan  apply 
+WARNING:root:Cannot call Open vSwitch: ovsdb-server.service is not running.
+```
