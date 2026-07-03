@@ -171,4 +171,15 @@ globals.yml  passwords.yml
 
 <img src="kolla.png">
 
+## before prechecks using kolla-ansible
 
+```
+===> on each node 
+
+apt install python3-docker 
+
+==> in Installer node under python virtual environment 
+
+ansible-galaxy  collection install ansible.netcommon
+
+```
