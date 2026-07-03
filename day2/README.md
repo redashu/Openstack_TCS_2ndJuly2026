@@ -211,3 +211,37 @@ community.general 5.8.0
 
 ansible-galaxy collection install ansible.netcommon:8.5.3  --force
 ```
+
+### after deploy -- post deploy 
+
+```
+kolla-ansible  -i /etc/kolla/multinode   post-deploy 
+Post-Deploying Playbooks : ansible-playbook -e @/etc/kolla/globals.yml  -e @/etc/kolla/passwords.yml -e CONFIG_DIR=/etc/kolla  /root/openstack-setup/share/kolla-ansible/ansible/post-deploy.yml  --inventory /etc/kolla/multinode
+[WARNING]: Invalid characters were found in group names but not replaced, use -vvvv to see details
+
+PLAY [Creating clouds.yaml file on the deploy node] *********************************************************************************************************
+
+TASK [Gathering Facts] **************************************************************************************************************************************
+ok: [localhost]
+
+TASK [Create /etc/openstack directory] **********************************************************************************************************************
+changed: [localhost]
+
+TASK [Template out clouds.yaml] *****************************************************************************************************************************
+changed: [localhost]
+
+PLAY [Creating admin openrc file on the deploy node] ********************************************************************************************************
+
+TASK [Gathering Facts] **************************************************************************************************************************************
+ok: [localhost]
+
+TASK [Template out admin-openrc.sh] *************************************************************************************************************************
+changed: [localhost]
+
+TASK [octavia : Template out octavia-openrc.sh] *************************************************************************************************************
+skipping: [localhost]
+
+PLAY RECAP **************************************************************************************************************************************************
+localhost                  : ok=5    changed=3    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+
+```
