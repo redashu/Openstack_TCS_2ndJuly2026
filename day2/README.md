@@ -148,3 +148,27 @@ Flags:                                   fpu vme de pse tsc msr pae mce cx8 apic
 root@node2:~# 
 
 ```
+
+### copy globals and password yaml files 
+
+```
+openstack-setup) root@node1:~# ls openstack-setup/share/
+kolla-ansible
+(openstack-setup) root@node1:~# ls openstack-setup/share/kolla-ansible/
+ansible  doc  etc_examples  init-runonce  init-vpn  requirements.yml  setup.cfg  tools
+(openstack-setup) root@node1:~# ls openstack-setup/share/kolla-ansible/etc_examples/
+kolla
+(openstack-setup) root@node1:~# ls openstack-setup/share/kolla-ansible/etc_examples/kolla/
+globals.yml  passwords.yml
+(openstack-setup) root@node1:~# cp -v openstack-setup/share/kolla-ansible/etc_examples/kolla/*  /etc/kolla/
+'openstack-setup/share/kolla-ansible/etc_examples/kolla/globals.yml' -> '/etc/kolla/globals.yml'
+'openstack-setup/share/kolla-ansible/etc_examples/kolla/passwords.yml' -> '/etc/kolla/passwords.yml'
+(openstack-setup) root@node1:~# 
+
+```
+
+## Kolla-ansible installer understanding 
+
+<img src="kolla.png">
+
+
