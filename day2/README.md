@@ -116,3 +116,35 @@ all-in-one  multinode
 multinode
 (openstack-setup) root@node1:~#
 ```
+### using inventory file 
+
+- node3 as storage node
+
+### Node2 as compute / Nova node 
+
+```
+oot@node2:~# free -m
+               total        used        free      shared  buff/cache   available
+Mem:           15988         270       15190           1         527       15444
+Swap:           4095           0        4095
+root@node2:~# lscpu 
+Architecture:                x86_64
+  CPU op-mode(s):            32-bit, 64-bit
+  Address sizes:             48 bits physical, 48 bits virtual
+  Byte Order:                Little Endian
+CPU(s):                      8
+  On-line CPU(s) list:       0-7
+root@node2:~# 
+root@node2:~# 
+root@node2:~# 
+root@node2:~# 
+root@node2:~# uname -a
+Linux node2 5.15.0-185-generic #195-Ubuntu SMP Fri Jun 19 17:11:50 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
+root@node2:~# uname -p
+x86_64
+root@node2:~# lscpu  | grep -i vmx
+root@node2:~# lscpu  | grep -i svm
+Flags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm rep_good nopl cpuid extd_apicid tsc_known_freq pni pclmulqdq ssse3 fma cx16 sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy svm cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw perfctr_core ssbd ibrs ibpb stibp vmmcall fsgsbase tsc_adjust bmi1 avx2 smep bmi2 rdseed adx smap clflushopt clwb sha_ni xsaveopt xsavec xgetbv1 clzero xsaveerptr wbnoinvd arat npt lbrv nrip_save tsc_scale vmcb_clean flushbyasid pausefilter pfthreshold v_vmsave_vmload vgif umip rdpid overflow_recov succor arch_capabilities
+root@node2:~# 
+
+```
