@@ -183,3 +183,31 @@ apt install python3-docker
 ansible-galaxy  collection install ansible.netcommon
 
 ```
+
+### doing kolla-ansible precheck 
+
+```
+kolla-ansible -i /etc/kolla/multinode prechecks 
+
+===> if all set then do deploy 
+
+kolla-ansible -i /etc/kolla/multinode deploy
+```
+
+### if facing error related to sysctl or include task 
+
+```
+ansible-galaxy  collection list 
+
+# /root/.ansible/collections/ansible_collections
+Collection        Version
+----------------- -------
+ansible.netcommon 8.5.3  
+ansible.posix     1.4.0  
+ansible.utils     6.0.3  
+community.general 5.8.0  
+
+===> to install collection 
+
+ansible-galaxy collection install ansible.netcommon:8.5.3  --force
+```
