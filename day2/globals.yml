@@ -1,0 +1,17 @@
+ Dummy variable to allow Ansible to accept this file.
+workaround_ansible_issue_8743: yes
+# lets keep all the changes here only 
+enable_horizon: "yes"
+enable_nova: "yes"
+# for nested virtualization acceleration driver 
+nova_compute_virt_type: "kvm"
+nova_compute_cpu_mode: "host-passthrough"
+
+neutron_external_interface: "ens19"
+network_interface: "ens18"
+neutron_plugin_agent: "openvswitch"
+enable_neutron: "yes"
+enable_neutron_dvr: "yes"
+neutron_bridge_name: "br-ex"
+
+kolla_internal_vip_address: "10.0.39.1"
