@@ -429,3 +429,45 @@ root@node1:/etc/kolla# openstack  token issue -f json
   507  cat jack-user.sh 
 ```
 
+
+### comparing auth cli files 
+
+```
+oot@node1:/etc/kolla# cat  admin-openrc.sh 
+# Ansible managed
+
+# Clear any old environment that may conflict.
+for key in $( set | awk '{FS="="}  /^OS_/ {print $1}' ); do unset $key ; done
+export OS_PROJECT_DOMAIN_NAME='Default'
+export OS_USER_DOMAIN_NAME='Default'
+export OS_PROJECT_NAME='admin'
+export OS_TENANT_NAME='admin'
+export OS_USERNAME='admin'
+export OS_PASSWORD='3GfcJ8Qb4A49tuFETq2KqXZMTbSHXjE1IIwnAbSp'
+export OS_AUTH_URL='http://10.0.39.1:5000'
+export OS_INTERFACE='internal'
+export OS_ENDPOINT_TYPE='internalURL'
+export OS_IDENTITY_API_VERSION='3'
+export OS_REGION_NAME='RegionOne'
+export OS_AUTH_PLUGIN='password'
+root@node1:/etc/kolla# 
+root@node1:/etc/kolla# cat  jack-user.sh 
+# Ansible managed
+
+# Clear any old environment that may conflict.
+for key in $( set | awk '{FS="="}  /^OS_/ {print $1}' ); do unset $key ; done
+export OS_PROJECT_DOMAIN_NAME='training'
+export OS_USER_DOMAIN_NAME='training'
+export OS_PROJECT_NAME='ashu-sales'
+export OS_TENANT_NAME='ashu-sales'
+export OS_USERNAME='jack'
+export OS_PASSWORD='Redhat@123'
+export OS_AUTH_URL='http://10.0.39.1:5000'
+export OS_INTERFACE='internal'
+export OS_ENDPOINT_TYPE='internalURL'
+export OS_IDENTITY_API_VERSION='3'
+export OS_REGION_NAME='RegionOne'
+export OS_AUTH_PLUGIN='password'
+root@node1:/etc/kolla# 
+
+```
