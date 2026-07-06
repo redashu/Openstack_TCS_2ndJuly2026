@@ -168,3 +168,15 @@ kolla_internal_vip_address: "10.0.39.1"
 ### Important info about Horizon service 
 
 <img src="hori1.png">
+
+### Understanding info about default user,password and EP 
+
+<img src="hori2.png">
+
+### Updating info about connections 
+
+<img src="hori3.png">
+
+### Understanding the backend supported services for openstack 
+
+<img src="back1.png">
