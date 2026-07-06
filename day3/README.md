@@ -385,3 +385,47 @@ root@node1:/etc/kolla# openstack  token issue -f json
 }
 
 ```
+
+### openstack cli demo 
+
+```
+470  openstack domain show 
+  471  openstack domain show  default
+  472  openstack domain create training 
+  473  openstack domain list
+  474  openstack project  list
+  475  openstack project  create  --domain training  ashu-sales
+  476  openstack project  list
+  477  openstack project  show ashu-sales
+  478  openstack user list
+  479  openstack domain  list
+  480  openstack user show  ashu
+  481  openstack user create --domain training  --password "DevTcs@123"  jack
+  482  openstack user list
+  483  openstack user show jack
+  484  openstack user list
+  485  openstack project list
+  486  openstack domain list
+  487  openstack role  list
+  488  openstack role 
+  489  openstack role --help
+  490  openstack role add --project ashu-sales  --user jack 
+  491  openstack role add --project ashu-sales  --user jack  member 
+  492  openstack role assignment list 
+  493  openstack role assignment list --name
+  494  history 
+  495  openstack role assignment list --name
+  496  cd
+  497  cd /etc/kolla/
+  498  ls
+  499  cp  admin-openrc.sh   jack-user.sh 
+  500  vim jack-user.sh 
+  501  cat admin-openrc.sh 
+  502  vim jack-user.sh 
+  503  source  ./jack-user.sh 
+  504  openstack token issue 
+  505  openstack project list
+  506  ls
+  507  cat jack-user.sh 
+```
+
