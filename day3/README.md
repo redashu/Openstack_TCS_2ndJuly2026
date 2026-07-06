@@ -152,3 +152,19 @@ docker ps
 | 3c57c242c367 | quay.io/openstack.kolla/heat-engine:zed-rocky-9 | 2 days ago | Up 4 hours (healthy) | heat_engine |
 | 9edd84e4cf61 | quay.io/openstack.kolla/heat-api-cfn:zed-rocky-9 | 2 days ago | Up 4 hours (healthy) | heat_api_cfn |
 | bbd78539a7b1 | quay.io/openstack.kolla/heat-api:zed-rocky-9 | 2 days ago | Up 4 hours (healthy) | heat_api |
+
+
+### Understanding Openstack deployment lab infra & Network 
+
+```
+oot@node1:/etc/kolla# grep -i vip  /etc/kolla/globals.yml 
+kolla_internal_vip_address: "10.0.39.1"
+# This should be a VIP, an unused IP on your network that will float betw
+
+```
+
+<img src="net1.png">
+
+### Important info about Horizon service 
+
+<img src="hori1.png">
