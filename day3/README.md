@@ -180,3 +180,208 @@ kolla_internal_vip_address: "10.0.39.1"
 ### Understanding the backend supported services for openstack 
 
 <img src="back1.png">
+
+## Interacting openstack with cli 
+
+### Installing CLI 
+
+```
+apt  install python3-openstackclient
+
+===>
+
+openstack --version 
+openstack 5.8.0
+root@node1:/etc/kolla# 
+```
+
+### way of login via auth process
+
+<img src="auth1.png">
+
+
+### demo 
+
+```
+root@node1:/etc/kolla# source  /etc/kolla/admin-openrc.sh 
+root@node1:/etc/kolla# cat admin-openrc.sh 
+# Ansible managed
+
+# Clear any old environment that may conflict.
+for key in $( set | awk '{FS="="}  /^OS_/ {print $1}' ); do unset $key ; done
+export OS_PROJECT_DOMAIN_NAME='Default'
+export OS_USER_DOMAIN_NAME='Default'
+export OS_PROJECT_NAME='admin'
+export OS_TENANT_NAME='admin'
+export OS_USERNAME='admin'
+export OS_PASSWORD='3GfcJ8Qb4A49tuFETq2KqXZMTbSHXjE1IIwnAbSp'
+export OS_AUTH_URL='http://10.0.39.1:5000'
+export OS_INTERFACE='internal'
+export OS_ENDPOINT_TYPE='internalURL'
+export OS_IDENTITY_API_VERSION='3'
+export OS_REGION_NAME='RegionOne'
+export OS_AUTH_PLUGIN='password'
+root@node1:/etc/kolla# openstack service list
++----------------------------------+-----------+----------------+
+| ID                               | Name      | Type           |
++----------------------------------+-----------+----------------+
+| 08b4431534be4f8587b13e8ac4c4a07d | placement | placement      |
+| 4eef5e18b5b04baa8b46ff0709f4d048 | heat      | orchestration  |
+| 885bb275217c4a5f83854f108b9fa820 | glance    | image          |
+| 8b6d6e5ebb474ccc8bea2d8737512cdb | keystone  | identity       |
+| 9fbbfe8249444183b8020ea6aa3a1249 | neutron   | network        |
+| b231a7cfd2a9480d835abd1116672988 | nova      | compute        |
+| ba0aa15283934cd6a1018938c148e24f | heat-cfn  | cloudformation |
++----------------------------------+-----------+----------------+
+root@node1:/etc/kolla# openstack catalog  list
++-----------+----------------+-----------------------------------------------------------------------+
+| Name      | Type           | Endpoints                                                             |
++-----------+----------------+-----------------------------------------------------------------------+
+| placement | placement      | RegionOne                                                             |
+|           |                |   internal: http://10.0.39.1:8780                                     |
+|           |                | RegionOne                                                             |
+|           |                |   public: http://10.0.39.1:8780                                       |
+|           |                |                                                                       |
+| heat      | orchestration  | RegionOne                                                             |
+|           |                |   internal: http://10.0.39.1:8004/v1/c5e84cfbf4e5432c92c200d87c8667db |
+|           |                | RegionOne                                                             |
+|           |                |   public: http://10.0.39.1:8004/v1/c5e84cfbf4e5432c92c200d87c8667db   |
+|           |                |                                                                       |
+| glance    | image          | RegionOne                                                             |
+|           |                |   internal: http://10.0.39.1:9292                                     |
+|           |                | RegionOne                                                             |
+|           |                |   public: http://10.0.39.1:9292                                       |
+|           |                |                                                                       |
+| keystone  | identity       | RegionOne                                                             |
+|           |                |   internal: http://10.0.39.1:5000                                     |
+
+```
+
+## Keystone in Openstack 
+
+<img src="auth2.png">
+
+### some keystone centric commands 
+
+```
+oot@node1:/etc/kolla# cat admin-openrc.sh 
+# Ansible managed
+
+# Clear any old environment that may conflict.
+for key in $( set | awk '{FS="="}  /^OS_/ {print $1}' ); do unset $key ; done
+export OS_PROJECT_DOMAIN_NAME='Default'
+export OS_USER_DOMAIN_NAME='Default'
+export OS_PROJECT_NAME='admin'
+export OS_TENANT_NAME='admin'
+export OS_USERNAME='admin'
+export OS_PASSWORD='3GfcJ8Qb4A49tuFETq2KqXZMTbSHXjE1IIwnAbSp'
+export OS_AUTH_URL='http://10.0.39.1:5000'
+export OS_INTERFACE='internal'
+export OS_ENDPOINT_TYPE='internalURL'
+export OS_IDENTITY_API_VERSION='3'
+export OS_REGION_NAME='RegionOne'
+export OS_AUTH_PLUGIN='password'
+root@node1:/etc/kolla# 
+root@node1:/etc/kolla# 
+root@node1:/etc/kolla# openstack service list
++----------------------------------+-----------+----------------+
+| ID                               | Name      | Type           |
++----------------------------------+-----------+----------------+
+| 08b4431534be4f8587b13e8ac4c4a07d | placement | placement      |
+| 4eef5e18b5b04baa8b46ff0709f4d048 | heat      | orchestration  |
+| 885bb275217c4a5f83854f108b9fa820 | glance    | image          |
+| 8b6d6e5ebb474ccc8bea2d8737512cdb | keystone  | identity       |
+| 9fbbfe8249444183b8020ea6aa3a1249 | neutron   | network        |
+| b231a7cfd2a9480d835abd1116672988 | nova      | compute        |
+| ba0aa15283934cd6a1018938c148e24f | heat-cfn  | cloudformation |
++----------------------------------+-----------+----------------+
+root@node1:/etc/kolla# openstack domain  list
++----------------------------------+------------------+---------+--------------------+
+| ID                               | Name             | Enabled | Description        |
++----------------------------------+------------------+---------+--------------------+
+| aead084565024688a8ae84b6f0d24356 | heat_user_domain | True    |                    |
+| default                          | Default          | True    | The default domain |
++----------------------------------+------------------+---------+--------------------+
+root@node1:/etc/kolla# openstack project   list
++----------------------------------+---------+
+| ID                               | Name    |
++----------------------------------+---------+
+| ae898e2f4999465aa8f7d2c74d5ac616 | service |
+| c5e84cfbf4e5432c92c200d87c8667db | admin   |
++----------------------------------+---------+
+root@node1:/etc/kolla# openstack user   list
++----------------------------------+-------------------+
+| ID                               | Name              |
++----------------------------------+-------------------+
+| 985c845632814153935af665b7464997 | admin             |
+| a15610f09053439581c64968c95c556b | glance            |
+| b18c239f5faa4fff8f89e8d15b9e4360 | placement         |
+| 0ff91921ac574d9a8b350076b5de952c | nova              |
+| e94a74a6d0fe476889bb54f62992b1b5 | neutron           |
+| 2dc35262979c4c6aa035dd40b5eee9b3 | heat              |
+| 91ecaea1f0e74aeabc6263bf31e5e7b8 | heat_domain_admin |
++----------------------------------+-------------------+
+root@node1:/etc/kolla# openstack roles   list
+openstack: 'roles list' is not an openstack command. See 'openstack --help'.
+Did you mean one of these?
+  role add
+  role assignment list
+  role create
+  role delete
+  role list
+  role remove
+  role set
+  role show
+root@node1:/etc/kolla# openstack role   list
++----------------------------------+------------------+
+| ID                               | Name             |
++----------------------------------+------------------+
+| 24599dc58d324ea1b126aa7882fecb6f | service          |
+| 366d8df5d0ab4e8792d77f3891578368 | admin            |
+| 3963632d9c954726b8fe48ffffb1aaf0 | heat_stack_user  |
+| aa26fabe42084c08bcdafe7626f9988f | heat_stack_owner |
+| e00b40cb79154e69820a91f2bd3c5db9 | member           |
+| e801533738a8463a98d4b8c19c332481 | reader           |
+
+```
+
+### having token understanding 
+
+```
+openstack  token issue 
++------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Field      | Value                                                                                                                                                                                   |
++------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| expires    | 2026-07-07T07:37:54+0000                                                                                                                                                                |
+| id         | gAAAAABqS1tSXqtT2ScFcojB-FFTdKynrsSu42fdZRsyIVfOFyhOr87WCWJ7H5lL9t6ZXxF39FI0-MHdceUIivI-nvWwjb-9Cc6FtBF3Y4UbrQ4kmvCBhIKiJ6kZUr2B9XMHKDi9boWLj0UpVi2PA7jWx0L6xyuP28_zn84JRSeKomEvQ1DUAtQ |
+| project_id | c5e84cfbf4e5432c92c200d87c8667db                                                                                                                                                        |
+| user_id    | 985c845632814153935af665b7464997                                                                                                                                                        |
++------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+root@node1:/etc/kolla# openstack  user list  
++----------------------------------+-------------------+
+| ID                               | Name              |
++----------------------------------+-------------------+
+| 985c845632814153935af665b7464997 | admin             |
+| a15610f09053439581c64968c95c556b | glance            |
+| b18c239f5faa4fff8f89e8d15b9e4360 | placement         |
+| 0ff91921ac574d9a8b350076b5de952c | nova              |
+| e94a74a6d0fe476889bb54f62992b1b5 | neutron           |
+| 2dc35262979c4c6aa035dd40b5eee9b3 | heat              |
+| 91ecaea1f0e74aeabc6263bf31e5e7b8 | heat_domain_admin |
++----------------------------------+-------------------+
+root@node1:/etc/kolla# openstack  project  list  
++----------------------------------+---------+
+| ID                               | Name    |
++----------------------------------+---------+
+| ae898e2f4999465aa8f7d2c74d5ac616 | service |
+| c5e84cfbf4e5432c92c200d87c8667db | admin   |
++----------------------------------+---------+
+root@node1:/etc/kolla# openstack  token issue -f json 
+{
+  "expires": "2026-07-07T07:39:19+0000",
+  "id": "gAAAAABqS1unuZcz6lTgmaN2-Cqs-WLyTC-wRISMHPT6tWffFfddKYmbblJ9YmiXi9JFJBwjJq3C1qYK-lRM0BUkSznNER692EJgMqTj1eOwsnQPESNnPogtGVIiMUKALgsvpJp-5tRIYV6W1mPkz2Ic5DrHUOHdeGvXV6cwdEE69kEhXrMogiY",
+  "project_id": "c5e84cfbf4e5432c92c200d87c8667db",
+  "user_id": "985c845632814153935af665b7464997"
+}
+
+```
