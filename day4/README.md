@@ -162,3 +162,49 @@ Server: Docker Engine - Community
 ```
 
 > Note: `chmod 777 /var/run/docker.sock` is not recommended for long-term security. Prefer adding the user to the `docker` group and re-logging (or rebooting) so group membership takes effect.
+
+
+### recheck with openstack user login option 
+
+```
+tudent@node1:~$ sudo -i
+root@node1:~# ls
+openstack-setup  snap
+root@node1:~# source  openstack-setup/bin/activate
+(openstack-setup) root@node1:~# ls
+openstack-setup  snap
+(openstack-setup) root@node1:~# 
+(openstack-setup) root@node1:~# openstack service list
+Missing value auth-url required for auth plugin password
+(openstack-setup) root@node1:~# ls  /etc/kolla/
+admin-openrc.sh  globals.yml   horizon          keystone-ssh          multinode                  neutron-server       nova-novncproxy        placement-api
+clouds.yaml      haproxy       jack-user.sh     kolla-toolbox         neutron-dhcp-agent         nova-api             nova-scheduler         rabbitmq
+cron             heat-api      keepalived       mariadb               neutron-l3-agent           nova-api-bootstrap   openvswitch-db-server
+fluentd          heat-api-cfn  keystone         mariadb-clustercheck  neutron-metadata-agent     nova-cell-bootstrap  openvswitch-vswitchd
+glance-api       heat-engine   keystone-fernet  memcached             neutron-openvswitch-agent  nova-conductor       passwords.yml
+(openstack-setup) root@node1:~# 
+(openstack-setup) root@node1:~# 
+(openstack-setup) root@node1:~# source  /etc/kolla/admin-openrc.sh  
+(openstack-setup) root@node1:~# 
+(openstack-setup) root@node1:~# openstack service list
++----------------------------------+-----------+----------------+
+| ID                               | Name      | Type           |
++----------------------------------+-----------+----------------+
+| 08b4431534be4f8587b13e8ac4c4a07d | placement | placement      |
+| 4eef5e18b5b04baa8b46ff0709f4d048 | heat      | orchestration  |
+| 885bb275217c4a5f83854f108b9fa820 | glance    | image          |
+| 8b6d6e5ebb474ccc8bea2d8737512cdb | keystone  | identity       |
+| 9fbbfe8249444183b8020ea6aa3a1249 | neutron   | network        |
+| b231a7cfd2a9480d835abd1116672988 | nova      | compute        |
+| ba0aa15283934cd6a1018938c148e24f | heat-cfn  | cloudformation |
++----------------------------------+-----------+----------------+
+(openstack-setup) root@node1:~# openstack token issue -f json 
+{
+  "expires": "2026-07-08T04:00:54+0000",
+  "id": "gAAAAABqTHn2m-sMyTrork3K7OGO-T-igYLvQiLcr0Xv-rAh8iqH488149mYy10oIWjgyxQK6EA3kkozOMQ6Mv3wHGcskPmqexvk3f0o9NahhI_sWtDRtWWzIFZyNEWXUC6i3p55jfOtQVYuyndlYAV05ing3jD859Xl4oJBkiL7BEuhakdDbpw",
+  "project_id": "c5e84cfbf4e5432c92c200d87c8667db",
+  "user_id": "985c845632814153935af665b7464997"
+}
+(openstack-setup) root@node1:~# 
+
+```
