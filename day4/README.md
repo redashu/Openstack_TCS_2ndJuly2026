@@ -609,3 +609,75 @@ jammy-server-cloudimg-amd64-disk-kvm.img  openstack-setup  snap
 (openstack-setup) root@node1:~# 
 
 ```
+
+## Neutron concpet and understanding with container 
+
+<img src="net1.png">
+
+### checking some details about  Neutron bridge
+
+```
+openstack-setup) root@node1:/etc/kolla# docker  exec -it  openvswitch_vswitchd  bash 
+(openvswitch-vswitchd)[root@node1 /]# ovs-vsctl  show 
+e489dd9d-13c8-452c-a8d9-649b11547536
+    Manager "ptcp:6640:127.0.0.1"
+        is_connected: true
+    Bridge br-int
+        Controller "tcp:127.0.0.1:6633"
+            is_connected: true
+(openvswitch-vswitchd)[root@node1 /]# 
+(openvswitch-vswitchd)[root@node1 /]# 
+(openvswitch-vswitchd)[root@node1 /]# 
+(openvswitch-vswitchd)[root@node1 /]# ovs-vsctl  list-br 
+br-ex
+br-int
+br-tun
+(openvswitch-vswitchd)[root@node1 /]# ovs-vsctl  list-ports  br-int
+int-br-ex
+patch-tun
+(openvswitch-vswitchd)[root@node1 /]# ovs-vsctl  list-ports  br-tun
+patch-int
+(openvswitch-vswitchd)[root@node1 /]# ovs-vsctl  list-ports  br-ex
+ens19
+phy-br-ex
+
+```
+
+### in external flat network type the provider name is  physnet1 only 
+
+```
+oot@node1:~# docker ps  | grep -i openvsw
+c3405ac2ebbe   quay.io/openstack.kolla/neutron-openvswitch-agent:zed-rocky-9   "dumb-init --single-…"   4 days ago   Up 9 hours (healthy)             neutron_openvswitch_agent
+dbeadb1d241f   quay.io/openstack.kolla/openvswitch-vswitchd:zed-rocky-9        "dumb-init --single-…"   4 days ago   Up 9 hours (healthy)             openvswitch_vswitchd
+9d630fce627e   quay.io/openstack.kolla/openvswitch-db-server:zed-rocky-9       "dumb-init --single-…"   4 days ago   Up 9 hours (healthy)             openvswitch_db
+root@node1:~# docker  exec -it neutron_openvswitch_agent bash 
+(neutron-openvswitch-agent)[neutron@node1 /]$ 
+(neutron-openvswitch-agent)[neutron@node1 /]$ 
+(neutron-openvswitch-agent)[neutron@node1 /]$ cd /etc/neutron/
+(neutron-openvswitch-agent)[neutron@node1 /etc/neutron]$ ls
+api-paste.ini  oslo-config-generator  plugins                 README.txt     rootwrap.d
+neutron.conf   oslo-policy-generator  README.policy.yaml.txt  rootwrap.conf
+(neutron-openvswitch-agent)[neutron@node1 /etc/neutron]$ cd plugins/
+(neutron-openvswitch-agent)[neutron@node1 /etc/neutron/plugins]$ ls
+ml2  neutron
+(neutron-openvswitch-agent)[neutron@node1 /etc/neutron/plugins]$ cd ml2/
+(neutron-openvswitch-agent)[neutron@node1 /etc/neutron/plugins/ml2]$ ls
+openvswitch_agent.ini
+(neutron-openvswitch-agent)[neutron@node1 /etc/neutron/plugins/ml2]$ cat openvswitch_agent.ini 
+[agent]
+tunnel_types = vxlan
+l2_population = true
+arp_responder = true
+enable_distributed_routing = True
+
+[securitygroup]
+firewall_driver = neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver
+
+[ovs]
+bridge_mappings = physnet1:br-ex
+datapath_type = system
+ovsdb_connection = tcp:127.0.0.1:6640
+ovsdb_timeout = 10
+local_ip = 10.0.19.76
+```
+
