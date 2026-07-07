@@ -290,3 +290,131 @@ root@node1:/etc/kolla/horizon#
 
 <img src="glance1.png">
 
+### glance flow 
+
+<img src="glance2.png">
+
+### checking glance service and EP 
+
+```
+oot@node1:/etc/kolla/horizon# openstack service list
++----------------------------------+-----------+----------------+
+| ID                               | Name      | Type           |
++----------------------------------+-----------+----------------+
+| 08b4431534be4f8587b13e8ac4c4a07d | placement | placement      |
+| 4eef5e18b5b04baa8b46ff0709f4d048 | heat      | orchestration  |
+| 885bb275217c4a5f83854f108b9fa820 | glance    | image          |
+| 8b6d6e5ebb474ccc8bea2d8737512cdb | keystone  | identity       |
+| 9fbbfe8249444183b8020ea6aa3a1249 | neutron   | network        |
+| b231a7cfd2a9480d835abd1116672988 | nova      | compute        |
+| ba0aa15283934cd6a1018938c148e24f | heat-cfn  | cloudformation |
++----------------------------------+-----------+----------------+
+root@node1:/etc/kolla/horizon# openstack catalog list
++-----------+----------------+-----------------------------------------------------------------------+
+| Name      | Type           | Endpoints                                                             |
++-----------+----------------+-----------------------------------------------------------------------+
+| placement | placement      | RegionOne                                                             |
+|           |                |   internal: http://10.0.39.1:8780                                     |
+|           |                | RegionOne                                                             |
+|           |                |   public: http://10.0.39.1:8780                                       |
+|           |                |                                                                       |
+| heat      | orchestration  | RegionOne                                                             |
+|           |                |   internal: http://10.0.39.1:8004/v1/c5e84cfbf4e5432c92c200d87c8667db |
+|           |                | RegionOne                                                             |
+|           |                |   public: http://10.0.39.1:8004/v1/c5e84cfbf4e5432c92c200d87c8667db   |
+|           |                |                                                                       |
+| glance    | image          | RegionOne                                                             |
+|           |                |   internal: http://10.0.39.1:9292                                     |
+|           |                | RegionOne                                                             |
+|           |                |   public: http://10.0.39.1:9292                                       |
+|           |                |                                                  
+
+```
+
+### exploring internal image location inside docker container 
+
+```
+root@node1:/etc/kolla/horizon# docker ps  | grep -i glan
+add760030436   quay.io/openstack.kolla/glance-api:zed-rocky-9                  "dumb-init --single-…"   3 days ago   Up 6 hours (healthy)             glance_api
+root@node1:/etc/kolla/horizon# 
+root@node1:/etc/kolla/horizon# 
+root@node1:/etc/kolla/horizon# 
+root@node1:/etc/kolla/horizon# docker exec -it glance_api  bash 
+(glance-api)[glance@node1 /]$ cd /etc/
+(glance-api)[glance@node1 /etc]$ ls
+adjtime                 dnf           gshadow-     ld.so.cache    mime.types         passwd-         rocky-release-upstream  statetab.d          tmpfiles.d
+aliases                 environment   gss          ld.so.conf     modprobe.d         pkcs11          rpc                     subgid              tpm2-tss
+alternatives            ethertypes    host.conf    ld.so.conf.d   motd               pkgconfig       rpm                     subgid-             virc
+bash_completion.d       exports       hostname     libaudit.conf  motd.d             pki             rwtab.d                 subuid              X11
+bashrc                  filesystems   hosts        libibverbs.d   mtab               pm              sasl2                   subuid-             xattr.conf
+bindresvport.blacklist  fonts         httpd        libnl          multipath          popt.d          securetty               sudo.conf           xdg
+BUILDTIME               fstab.script  inittab      libreport      netconfig          printcap        security                sudoers             yum
+ceph                    gcrypt        inputrc      libuser.conf   networks           profile         selinux                 sudoers.d           yum.conf
+crypto-policies         glance        iproute2     locale.conf    nsswitch.conf      profile.d       services                sudo-ldap.conf      yum.repos.d
+csh.cshrc               gnupg         iscsi        localtime      nsswitch.conf.bak  protocols       shadow                  sysconfig
+csh.login               GREP_COLORS   issue        login.defs     openldap           rc.d            shadow-                 systemd
+dbus-1                  groff         issue.d      logrotate.d    opt                rc.local        shells                  system-release
+debuginfod              group         issue.net    lvm            os-release         redhat-release  skel                    system-release-cpe
+default                 group-        krb5.conf    machine-id     pam.d              resolv.conf     ssh                     terminfo
+depmod.d                gshadow       krb5.conf.d  mailcap        passwd             rocky-release   ssl                     timezone
+(glance-api)[glance@node1 /etc]$ cd /var/lib/
+(glance-api)[glance@node1 /var/lib]$ ls
+alternatives  dnf  games  glance  httpd  iscsi  kolla  misc  private  rpm  rpm-state  selinux  systemd  tpm2-tss
+(glance-api)[glance@node1 /var/lib]$ cd glance/
+(glance-api)[glance@node1 /var/lib/glance]$ ls
+images  staging  tasks_work_dir
+(glance-api)[glance@node1 /var/lib/glance]$ cd images/
+(glance-api)[glance@node1 /var/lib/glance/images]$ ls
+(glance-api)[glance@node1 /var/lib/glance/images]$ 
+
+```
+### in kolla-installer location checking things 
+
+```
+oot@node1:/etc/kolla/glance-api# ls
+config.json  glance-api.conf
+root@node1:/etc/kolla/glance-api# cat glance-api.conf 
+[DEFAULT]
+debug = False
+log_file = /var/log/kolla/glance/glance-api.log
+use_forwarded_for = true
+worker_self_reference_url = http://10.0.19.76:9292
+bind_host = 10.0.19.76
+bind_port = 9292
+workers = 4
+enabled_backends = file:file, http:http
+cinder_catalog_info = volume:cinder:internalURL
+transport_url = rabbit://openstack:Ddmr1rvTJZTa6D295QYDPpGPAr5Vm7EGRjPt4gvW@10.0.19.76:5672//
+
+[database]
+connection = mysql+pymysql://glance:S3b200qo2dQx5avWmAQmJv6tbhhKd4uNgJk465ql@10.0.39.1:3306/glance
+connection_recycle_time = 10
+max_pool_size = 1
+max_retries = -1
+
+[keystone_authtoken]
+service_type = image
+www_authenticate_uri = http://10.0.39.1:5000
+auth_url = http://10.0.39.1:5000
+auth_type = password
+project_domain_id = default
+user_domain_id = default
+project_name = service
+username = glance
+password = Z6kBRAvCxSwkORvZuWcRXATcARwezqdqhj6nzraE
+cafile =
+region_name = RegionOne
+memcache_security_strategy = ENCRYPT
+memcache_secret_key = ZO6sHLVhKBNMvQ4Li2xN7Tv0FhJh5cZaluFmr1Eb
+memcached_servers = 10.0.19.76:11211
+
+[paste_deploy]
+flavor = keystone
+
+[glance_store]
+default_backend = file
+
+[file]
+filesystem_store_datadir = /var/lib/glance/images/
+
+```
