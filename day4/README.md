@@ -418,3 +418,114 @@ default_backend = file
 filesystem_store_datadir = /var/lib/glance/images/
 
 ```
+
+### checking mariadb container for image entries
+
+```
+openstack-setup) root@node1:~# grep -iw database_password  /etc/kolla/passwords.yml 
+database_password: 0B4tBYdkFRCe1VyP0ANp4ayGNt6vb0EMbIbo1f0k
+(openstack-setup) root@node1:~# 
+(openstack-setup) root@node1:~# 
+(openstack-setup) root@node1:~# 
+(openstack-setup) root@node1:~# docker  exec -it mariadb bash 
+(mariadb)[mysql@node1 /]$ 
+(mariadb)[mysql@node1 /]$ mysql -u root -p
+Enter password: 
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 33525
+Server version: 10.6.18-MariaDB-log MariaDB Server
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> show databases;
++--------------------+
+| Database           |
++--------------------+
+| glance             |
+| heat               |
+| information_schema |
+| keystone           |
+| mysql              |
+| neutron            |
+| nova               |
+| nova_api           |
+| nova_cell0         |
+| performance_schema |
+| placement          |
+| sys                |
++--------------------+
+12 rows in set (0.002 sec)
+
+MariaDB [(none)]> use glance;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+MariaDB [glance]> show tables;
++----------------------------------+
+| Tables_in_glance                 |
++----------------------------------+
+| alembic_version                  |
+| image_locations                  |
+| image_members                    |
+| image_properties                 |
+| image_tags                       |
+| images                           |
+| metadef_namespace_resource_types |
+| metadef_namespaces               |
+| metadef_objects                  |
+| metadef_properties               |
+| metadef_resource_types           |
+| metadef_tags                     |
+| task_info                        |
+| tasks                            |
++----------------------------------+
+14 rows in set (0.001 sec)
+
+MariaDB [glance]> desc images;
++------------------+-----------------------------------------------+------+-----+---------+-------+
+| Field            | Type                                          | Null | Key | Default | Extra |
++------------------+-----------------------------------------------+------+-----+---------+-------+
+| id               | varchar(36)                                   | NO   | PRI | NULL    |       |
+| name             | varchar(255)                                  | YES  |     | NULL    |       |
+| size             | bigint(20)                                    | YES  |     | NULL    |       |
+| status           | varchar(30)                                   | NO   |     | NULL    |       |
+| created_at       | datetime                                      | NO   | MUL | NULL    |       |
+| updated_at       | datetime                                      | YES  | MUL | NULL    |       |
+| deleted_at       | datetime                                      | YES  |     | NULL    |       |
+| deleted          | tinyint(1)                                    | NO   | MUL | NULL    |       |
+| disk_format      | varchar(20)                                   | YES  |     | NULL    |       |
+| container_format | varchar(20)                                   | YES  |     | NULL    |       |
+| checksum         | varchar(32)                                   | YES  | MUL | NULL    |       |
+| owner            | varchar(255)                                  | YES  | MUL | NULL    |       |
+| min_disk         | int(11)                                       | NO   |     | NULL    |       |
+| min_ram          | int(11)                                       | NO   |     | NULL    |       |
+| protected        | tinyint(1)                                    | NO   |     | 0       |       |
+| virtual_size     | bigint(20)                                    | YES  |     | NULL    |       |
+| visibility       | enum('private','public','shared','community') | NO   | MUL | shared  |       |
+| os_hidden        | tinyint(1)                                    | NO   | MUL | 0       |       |
+| os_hash_algo     | varchar(64)                                   | YES  |     | NULL    |       |
+| os_hash_value    | varchar(128)                                  | YES  | MUL | NULL    |       |
++------------------+-----------------------------------------------+------+-----+---------+-------+
+20 rows in set (0.001 sec)
+
+MariaDB [glance]> select * from images;
+Empty set (0.001 sec)
+
+```
+
+### history 
+
+```
+ grep -i database_password  /etc/kolla/passwords.yml 
+  616  grep -iw database_password  /etc/kolla/passwords.yml 
+  617  docker  exec -it mariadb bash 
+  618  openstack user list
+  619  openstack domain  list
+  620  history   | grep -i ashu
+  621  docker  exec -it mariadb bash 
+  622  docker exec -it glance_api  bash 
+
+```
