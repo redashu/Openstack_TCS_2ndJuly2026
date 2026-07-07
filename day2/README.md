@@ -4,11 +4,9 @@
 
 ## Validating Installer Machine Details
 
-### 1. System Checks
+### 1. Docker Details
 
 ```bash
-===> docker details
-
 root@node1:~# docker version
 Client: Docker Engine - Community
  Version:           29.6.1
@@ -38,9 +36,11 @@ Server: Docker Engine - Community
   Version:          0.19.0
   GitCommit:        de40ad0
 root@node1:~#
+```
 
-===> some basic details
+### 2. Basic Node Details
 
+```bash
 root@node1:~# hostname
 node1
 root@node1:~# ping node1
@@ -77,7 +77,7 @@ ansible-core       2.13.13
 kolla-ansible      15.6.0
 (openstack-setup) root@node1:~# pip list | grep -i setup
 setuptools         82.0.1
-```
+```3
 
 ### 2. Check Ansible Inventory
 
@@ -107,15 +107,24 @@ all-in-one  multinode
 (openstack-setup) root@node1:~# ls openstack-setup/share/kolla-ansible/ansible/inventory/
 all-in-one  multinode
 (openstack-setup) root@node1:~#
+```
+
+### 4. Create Configuration Directory
+
+```bash
 (openstack-setup) root@node1:~# mkdir /etc/kolla
 (openstack-setup) root@node1:~#
 (openstack-setup) root@node1:~# cp -v openstack-setup/share/kolla-ansible/ansible/inventory/multinode /etc/kolla/
 'openstack-setup/share/kolla-ansible/ansible/inventory/multinode' -> '/etc/kolla/multinode'
-(openstack-setup) root@node1:~#
-(openstack-setup) root@node1:~# ls /etc/kolla/
-multinode
-(openstack-setup) root@node1:~#
-```
+
+## Node Configuration
+
+### Inventory File Usage
+
+- **node3** configured as storage node
+- **node2** configured as compute/Nova node
+
+#### Node2 Resource Verification
 ### using inventory file 
 
 - node3 as storage node
@@ -136,11 +145,12 @@ CPU(s):                      8
   On-line CPU(s) list:       0-7
 root@node2:~# 
 root@node2:~# 
-root@node2:~# 
-root@node2:~# 
-root@node2:~# uname -a
-Linux node2 5.15.0-185-generic #195-Ubuntu SMP Fri Jun 19 17:11:50 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
-root@node2:~# uname -p
+root@node2:~#
+```
+
+## Kolla Configuration
+
+### Copy Configuration F
 x86_64
 root@node2:~# lscpu  | grep -i vmx
 root@node2:~# lscpu  | grep -i svm
@@ -154,10 +164,9 @@ root@node2:~#
 ```
 openstack-setup) root@node1:~# ls openstack-setup/share/
 kolla-ansible
-(openstack-setup) root@node1:~# ls openstack-setup/share/kolla-ansible/
-ansible  doc  etc_examples  init-runonce  init-vpn  requirements.yml  setup.cfg  tools
-(openstack-setup) root@node1:~# ls openstack-setup/share/kolla-ansible/etc_examples/
-kolla
+```
+
+## Kolla-Ansible Installer U
 (openstack-setup) root@node1:~# ls openstack-setup/share/kolla-ansible/etc_examples/kolla/
 globals.yml  passwords.yml
 (openstack-setup) root@node1:~# cp -v openstack-setup/share/kolla-ansible/etc_examples/kolla/*  /etc/kolla/
@@ -167,50 +176,63 @@ globals.yml  passwords.yml
 
 ```
 
-## Kolla-ansible installer understanding 
+## Pre-Deployment Setup
 
-<img src="kolla.png">
+### Install Docker Python Module on Each Node
 
-## before prechecks using kolla-ansible
-
+```bash
+apt install python3-docker
 ```
-===> on each node 
 
-apt install python3-docker 
+### Install Ansible Collection in Virtual Environment
 
+```bash
+ansible-galaxy collection install ansible.netcommon
 ==> in Installer node under python virtual environment 
+Run Pre-Deployment Checks
 
-ansible-galaxy  collection install ansible.netcommon
-
+```bash
+kolla-ansible -i /etc/kolla/multinode prechecks
 ```
 
-### doing kolla-ansible precheck 
+### Deploy OpenStack (After Pre-Checks Pass)
 
+```bash
 ```
 kolla-ansible -i /etc/kolla/multinode prechecks 
 
 ===> if all set then do deploy 
 
-kolla-ansible -i /etc/kolla/multinode deploy
-```
+kollTroubleshooting Ansible Collection Errors
 
-### if facing error related to sysctl or include task 
+If you encounter errors related to `sysctl` or include tasks, check installed collections:
+
+```bash
+ansible-galaxyrror related to sysctl or include task 
 
 ```
 ansible-galaxy  collection list 
 
 # /root/.ansible/collections/ansible_collections
-Collection        Version
------------------ -------
-ansible.netcommon 8.5.3  
-ansible.posix     1.4.0  
-ansible.utils     6.0.3  
-community.general 5.8.0  
-
-===> to install collection 
-
-ansible-galaxy collection install ansible.netcommon:8.5.3  --force
+Collection        Versi
 ```
+
+#### Reinstall a Collection (If Needed)
+
+```bash
+ansible-galaxy collection install ansible.netcommon:8.5.3 --force
+```
+
+### Post-Deployment Steps
+
+**Command executed:**
+```
+ansible-playbook -e @/etc/kolla/globals.yml -e @/etc/kolla/passwords.yml -e CONFIG_DIR=/etc/kolla /root/openstack-setup/share/kolla-ansible/ansible/post-deploy.yml --inventory /etc/kolla/multinode
+```
+
+**Output:**
+```
+kolla-ansible -i /etc/kolla/multinode
 
 ### after deploy -- post deploy 
 

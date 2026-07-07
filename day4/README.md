@@ -208,3 +208,80 @@ glance-api       heat-engine   keystone-fernet  memcached             neutron-op
 (openstack-setup) root@node1:~# 
 
 ```
+
+### accessing horizon container details 
+
+```
+oot@node1:/etc/kolla/horizon# ls
+config.json  custom_local_settings  horizon.conf  local_settings
+root@node1:/etc/kolla/horizon# 
+root@node1:/etc/kolla/horizon# docker  exec -it horizon  bash 
+(horizon)[root@node1 /]# ls /etc/openstack-dashboard/
+cinder_policy.yaml     default_policies    heat_policy.yaml      local_settings       nova_policy.d
+custom_local_settings  glance_policy.yaml  keystone_policy.yaml  neutron_policy.yaml  nova_policy.yaml
+(horizon)[root@node1 /]# 
+
+```
+
+### checking horizon container status 
+
+```
+root@node1:/etc/kolla/horizon# docker  ps  | grep -i horizon 
+51eec1f9053a   quay.io/openstack.kolla/horizon:zed-rocky-9                     "dumb-init --single-…"   3 days ago   Up 4 hours (healthy)             horizon
+root@node1:/etc/kolla/horizon# 
+root@node1:/etc/kolla/horizon# 
+root@node1:/etc/kolla/horizon# docker  stats horizon 
+
+====>
+
+oot@node1:/etc/kolla/horizon# docker  ps  | grep -i horizon 
+51eec1f9053a   quay.io/openstack.kolla/horizon:zed-rocky-9                     "dumb-init --single-…"   3 days ago   Up 4 hours (healthy)             horizon
+root@node1:/etc/kolla/horizon# 
+root@node1:/etc/kolla/horizon# 
+root@node1:/etc/kolla/horizon# docker  ps  | grep -i horizon 
+51eec1f9053a   quay.io/openstack.kolla/horizon:zed-rocky-9                     "dumb-init --single-…"   3 days ago   Up 4 hours (healthy)             horizon
+root@node1:/etc/kolla/horizon# 
+root@node1:/etc/kolla/horizon# docker  stop horizon 
+horizon
+root@node1:/etc/kolla/horizon# 
+root@node1:/etc/kolla/horizon# docker  ps  | grep -i horizon 
+root@node1:/etc/kolla/horizon# docker ps
+CONTAINER ID   IMAGE                                                           COMMAND                  CREATED      STATUS                 PORTS     NAMES
+3c57c242c367   quay.io/openstack.kolla/heat-engine:zed-rocky-9                 "dumb-init --single-…"   3 days ago   Up 4 hours (healthy)             heat_engine
+9edd84e4cf61   quay.io/openstack.kolla/heat-api-cfn:zed-rocky-9                "dumb-init --single-…"   3 days ago   Up 4 hours (healthy)             heat_api_cfn
+root@node1:/etc/kolla/horizon# 
+root@node1:/etc/kolla/horizon# 
+root@node1:/etc/kolla/horizon# 
+root@node1:/etc/kolla/horizon# openstack service list
+Missing value auth-url required for auth plugin password
+root@node1:/etc/kolla/horizon# 
+root@node1:/etc/kolla/horizon# source  /etc/kolla/admin-openrc.sh 
+root@node1:/etc/kolla/horizon# 
+root@node1:/etc/kolla/horizon# openstack service list
++----------------------------------+-----------+----------------+
+| ID                               | Name      | Type           |
++----------------------------------+-----------+----------------+
+| 08b4431534be4f8587b13e8ac4c4a07d | placement | placement      |
+| 4eef5e18b5b04baa8b46ff0709f4d048 | heat      | orchestration  |
+| 885bb275217c4a5f83854f108b9fa820 | glance    | image          |
+| 8b6d6e5ebb474ccc8bea2d8737512cdb | keystone  | identity       |
+| 9fbbfe8249444183b8020ea6aa3a1249 | neutron   | network        |
+| b231a7cfd2a9480d835abd1116672988 | nova      | compute        |
+| ba0aa15283934cd6a1018938c148e24f | heat-cfn  | cloudformation |
++----------------------------------+-----------+----------------+
+root@node1:/etc/kolla/horizon# openstack domain  list
++----------------------------------+------------------+---------+--------------------+
+| ID                               | Name             | Enabled | Description        |
++----------------------------------+------------------+---------+--------------------+
+| 55f971b99fe241ffaddb31c0f219d29d | training         | True    |                    |
+| aead084565024688a8ae84b6f0d24356 | heat_user_domain | True    |                    |
+| default                          | Default          | True    | The default domain |
++----------------------------------+------------------+---------+--------------------+
+root@node1:/etc/kolla/horizon# docker  start horizon 
+horizon
+root@node1:/etc/kolla/horizon# docker ps  | grep -i hori
+51eec1f9053a   quay.io/openstack.kolla/horizon:zed-rocky-9                     "dumb-init --single-…"   3 days ago   Up 5 seconds (health: starting)             horizon
+root@node1:/etc/kolla/horizon# docker ps  | grep -i hori
+51eec1f9053a   quay.io/openstack.kolla/horizon:zed-rocky-9                     "dumb-init --single-…"   3 days ago   Up 24 seconds (healthy)             horizon
+root@node1:/etc/kolla/horizon# 
+```
