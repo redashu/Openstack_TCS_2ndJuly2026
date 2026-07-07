@@ -285,3 +285,8 @@ root@node1:/etc/kolla/horizon# docker ps  | grep -i hori
 51eec1f9053a   quay.io/openstack.kolla/horizon:zed-rocky-9                     "dumb-init --single-…"   3 days ago   Up 24 seconds (healthy)             horizon
 root@node1:/etc/kolla/horizon# 
 ```
+
+## Getting stared with Image management system with Glance 
+
+<img src="glance1.png">
+
