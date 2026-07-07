@@ -529,3 +529,83 @@ Empty set (0.001 sec)
   622  docker exec -it glance_api  bash 
 
 ```
+
+### uploading image using openstack-cli 
+
+```
+openstack-setup) root@node1:~# openstack service list
++----------------------------------+-----------+----------------+
+| ID                               | Name      | Type           |
++----------------------------------+-----------+----------------+
+| 08b4431534be4f8587b13e8ac4c4a07d | placement | placement      |
+| 4eef5e18b5b04baa8b46ff0709f4d048 | heat      | orchestration  |
+| 885bb275217c4a5f83854f108b9fa820 | glance    | image          |
+| 8b6d6e5ebb474ccc8bea2d8737512cdb | keystone  | identity       |
+| 9fbbfe8249444183b8020ea6aa3a1249 | neutron   | network        |
+| b231a7cfd2a9480d835abd1116672988 | nova      | compute        |
+| ba0aa15283934cd6a1018938c148e24f | heat-cfn  | cloudformation |
++----------------------------------+-----------+----------------+
+(openstack-setup) root@node1:~# openstack catalog list
++-----------+----------------+-----------------------------------------------------------------------+
+| Name      | Type           | Endpoints                                                             |
++-----------+----------------+-----------------------------------------------------------------------+
+| placement | placement      | RegionOne                                                             |
+|           |                |   internal: http://10.0.39.1:8780                                     |
+|           |                | RegionOne                                                             |
+|           |                |   public: http://10.0.39.1:8780                                       |
+|           |                |                                                                       |
+(openstack-setup) root@node1:~# 
+(openstack-setup) root@node1:~# 
+(openstack-setup) root@node1:~# 
+(openstack-setup) root@node1:~# 
+(openstack-setup) root@node1:~# wget https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64-disk-kvm.img
+--2026-07-07 06:49:44--  https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64-disk-kvm.img
+Resolving cloud-images.ubuntu.com (cloud-images.ubuntu.com)... 185.125.190.40, 185.125.190.37, 2620:2d:4000:1::17, ...
+Connecting to cloud-images.ubuntu.com (cloud-images.ubuntu.com)|185.125.190.40|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 665280000 (634M) [application/octet-stream]
+Saving to: ‘jammy-server-cloudimg-amd64-disk-kvm.img’
+
+jammy-server-cloudimg-amd64-disk-k 100%[===============================================================>] 634.46M  17.6MB/s    in 39s     
+
+2026-07-07 06:50:24 (16.1 MB/s) - ‘jammy-server-cloudimg-amd64-disk-kvm.img’ saved [665280000/665280000]
+
+(openstack-setup) root@node1:~# 
+(openstack-setup) root@node1:~# ls
+jammy-server-cloudimg-amd64-disk-kvm.img  openstack-setup  snap
+(openstack-setup) root@node1:~# openstack  image create --disk-format raw --public --file jammy-server-cloudimg-amd64-disk-kvm.img                ashu-ubuntu-22image
++------------------+----------------------------------------------------------------------------------------------------------------------+
+| Field            | Value                                                                                                                |
++------------------+----------------------------------------------------------------------------------------------------------------------+
+| checksum         | f3a282f0b941771e1b5c45e69c20c14d                                                                                     |
+| container_format | bare                                                                                                                 |
+| created_at       | 2026-07-07T06:51:23Z                                                                                                 |
+| disk_format      | raw                                                                                                                  |
+| file             | /v2/images/b22af30f-52df-4633-8931-3cc5c4c7560a/file                                                                 |
+| id               | b22af30f-52df-4633-8931-3cc5c4c7560a                                                                                 |
+| min_disk         | 0                                                                                                                    |
+| min_ram          | 0                                                                                                                    |
+| name             | ashu-ubuntu-22image                                                                                                  |
+| owner            | c5e84cfbf4e5432c92c200d87c8667db                                                                                     |
+| properties       | os_hash_algo='sha512', os_hash_value='e798716313039b307521cb7caeffde65945cc24ed2b5895170c08a865bdb8d595198965c5bd733 |
+|                  | 1a6688da96da75ac33ab6fac74a1a3f8e5380c92a9f52660fe', os_hidden='False', owner_specified.openstack.md5='',            |
+|                  | owner_specified.openstack.object='images/ashu-ubuntu-22image', owner_specified.openstack.sha256='', stores='file'    |
+| protected        | False                                                                                                                |
+| schema           | /v2/schemas/image                                                                                                    |
+| size             | 665280000                                                                                                            |
+| status           | active                                                                                                               |
+| tags             |                                                                                                                      |
+| updated_at       | 2026-07-07T06:51:26Z                                                                                                 |
+| virtual_size     | 665280000                                                                                                            |
+| visibility       | public                                                                                                               |
++------------------+----------------------------------------------------------------------------------------------------------------------+
+(openstack-setup) root@node1:~# openstack image list
++--------------------------------------+---------------------+--------+
+| ID                                   | Name                | Status |
++--------------------------------------+---------------------+--------+
+| 78a6f549-ea4a-4b58-bc63-4c03c3818eca | ashu-cirros-os      | active |
+| b22af30f-52df-4633-8931-3cc5c4c7560a | ashu-ubuntu-22image | active |
++--------------------------------------+---------------------+--------+
+(openstack-setup) root@node1:~# 
+
+```
