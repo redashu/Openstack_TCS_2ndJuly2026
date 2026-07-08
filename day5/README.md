@@ -60,3 +60,39 @@ root@node1:~# openstack catalog  list
 ### Nova in Our setup 
 
 <img src="nova3.png">
+
+### validation 
+
+```
+ot@node1:~# docker  ps  | grep -i nova
+04fe7166e196   quay.io/openstack.kolla/nova-novncproxy:zed-rocky-9             "dumb-init --single-…"   4 days ago     Up 6 hours (healthy)             nova_novncproxy
+ce61c4266fc9   quay.io/openstack.kolla/nova-conductor:zed-rocky-9              "dumb-init --single-…"   4 days ago     Up 6 hours (healthy)             nova_conductor
+f5aa3cf37e03   quay.io/openstack.kolla/nova-api:zed-rocky-9                    "dumb-init --single-…"   4 days ago     Up 6 hours (healthy)             nova_api
+5849492a5734   quay.io/openstack.kolla/nova-scheduler:zed-rocky-9              "dumb-init --single-…"   4 days ago     Up 6 hours (healthy)             nova_scheduler
+root@node1:~# 
+root@node1:~# 
+root@node1:~# ssh node2  docker  ps  | grep -i nova
+f9eb129495a8   quay.io/openstack.kolla/nova-compute:zed-rocky-9                "dumb-init --single-…"   17 hours ago   Up 6 hours (healthy)                      nova_compute
+a216fb3359d7   quay.io/openstack.kolla/nova-libvirt:zed-rocky-9                "dumb-init --single-…"   4 days ago     Up 6 hours (healthy)                      nova_libvirt
+3bde37421faf   quay.io/openstack.kolla/nova-ssh:zed-rocky-9                    "dumb-init --single-…"   4 days ago     Up 6 hours (healthy)                      nova_ssh
+root@node1:~# 
+root@node1:~# ssh node3  docker  ps  | grep -i nova
+root@node1:~# 
+root@node1:~# source /etc/kolla/admin-openrc.sh 
+root@node1:~# 
+r
+root@node1:~# openstack service list 
++----------------------------------+-----------+----------------+
+| ID                               | Name      | Type           |
++----------------------------------+-----------+----------------+
+| 08b4431534be4f8587b13e8ac4c4a07d | placement | placement      |
+| 4eef5e18b5b04baa8b46ff0709f4d048 | heat      | orchestration  |
+| 885bb275217c4a5f83854f108b9fa820 | glance    | image          |
+| 8b6d6e5ebb474ccc8bea2d8737512cdb | keystone  | identity       |
+| 9fbbfe8249444183b8020ea6aa3a1249 | neutron   | network        |
+| b231a7cfd2a9480d835abd1116672988 | nova      | compute        |
+| ba0aa15283934cd6a1018938c148e24f | heat-cfn  | cloudformation |
+| c810968d45b44fa7a8c65fc9cc591ec6 | cinderv3  | volumev3       |
++----------------------------------+-----------+----------------+
+
+```
