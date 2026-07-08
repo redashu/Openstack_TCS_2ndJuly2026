@@ -140,3 +140,8 @@ ff02::2 ip6-allrouters
 root@node1:~# openstack hypervisor show node2
 
 ```
+
+### login to linux vm with sshkey pair (private key)
+
+<img src="key1.png">
+
