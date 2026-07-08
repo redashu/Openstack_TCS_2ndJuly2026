@@ -5,7 +5,7 @@
 
 ### Lab Access
 
-[Lab URL](https://remotelabs.rjpinfotek.com/remote/login?lang=en)
+[Lab URL](lang=en)
 
 | S NO | Name | Username | Password |
 |------|------|----------|----------|
