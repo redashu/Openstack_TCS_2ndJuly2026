@@ -96,3 +96,47 @@ root@node1:~# openstack service list
 +----------------------------------+-----------+----------------+
 
 ```
+
+### More nova related commands 
+
+```
+ot@node1:~# openstack compute  service list 
++--------------------------------------+----------------+-------+----------+---------+-------+----------------------------+
+| ID                                   | Binary         | Host  | Zone     | Status  | State | Updated At                 |
++--------------------------------------+----------------+-------+----------+---------+-------+----------------------------+
+| d6d42953-70de-44fb-942c-29e93a4147b1 | nova-scheduler | node1 | internal | enabled | up    | 2026-07-08T06:47:16.000000 |
+| 5308fd21-5706-4551-85c5-9fbe178d4990 | nova-conductor | node1 | internal | enabled | up    | 2026-07-08T06:47:21.000000 |
+| c2646ab6-08b1-4a6f-8761-c98f5b4b3c3b | nova-compute   | node2 | nova     | enabled | up    | 2026-07-08T06:47:22.000000 |
++--------------------------------------+----------------+-------+----------+---------+-------+----------------------------+
+root@node1:~# 
+root@node1:~# openstack hypervisor 
+openstack: 'hypervisor' is not an openstack command. See 'openstack --help'.
+Did you mean one of these?
+  hypervisor list
+  hypervisor show
+  hypervisor stats show
+  extension list
+  extension show
+root@node1:~# openstack hypervisor list
++----+---------------------+-----------------+------------+-------+
+| ID | Hypervisor Hostname | Hypervisor Type | Host IP    | State |
++----+---------------------+-----------------+------------+-------+
+|  1 | node2               | QEMU            | 10.0.19.77 | up    |
++----+---------------------+-----------------+------------+-------+
+root@node1:~# cat /etc/hosts
+127.0.0.1 localhost
+127.0.1.1 student
+
+# The following lines are desirable for IPv6 capable hosts
+::1     ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+
+10.0.19.76  node1
+10.0.19.77  node2
+10.0.19.78  node3
+root@node1:~# openstack hypervisor show node2
+
+```
