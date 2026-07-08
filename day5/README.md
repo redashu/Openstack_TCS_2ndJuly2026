@@ -40,3 +40,23 @@ root@node1:~# openstack catalog  list
 |           |                |                                                     
 
 ```
+
+## openstack neutron provider vs tenant network areas
+
+<img src="net1.png">
+
+### openstack neutron bridge tech 
+
+<img src="net2.png">
+
+## Introduction to Nova components
+
+<img src="nova1.png">
+
+### Nova vm creating workflow 
+
+<img src="nova2.png">
+
+### Nova in Our setup 
+
+<img src="nova3.png">

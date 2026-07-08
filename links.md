@@ -3,6 +3,10 @@
 - [Cirros image download link](https://download.cirros-cloud.net/)
 - [Ubuntu 22.04 image](https://cloud-images.ubuntu.com/jammy/current/)
 
+- [openstack docs](https://docs.openstack.org/2026.1/)
+
+
+
 ### Lab Access
 
 [Lab URL](lang=en)
