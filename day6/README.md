@@ -103,3 +103,36 @@ o- / ...........................................................................
 
 ```
 
+### in vscode 
+
+```
+42  mount | grep -i config 
+  143  lsmod  | grep -i iscsi 
+  144  systemctl status open-iscsi 
+  145  systemctl status iscsid
+  146  apt install open-iscsi 
+  147  systemctl status iscsid
+  148  lsmod  | grep -i iscsi 
+  149  history 
+root@node2:~# modprobe libiscsi
+modprobe scsi_transport_iscsi
+root@node2:~# 
+root@node2:~# modprobe scsi_transport_iscsi
+root@node2:~# modprobe libiscsi
+root@node2:~# lsmod  | grep -i iscsi 
+libiscsi               69632  0
+scsi_transport_iscsi   139264  1 libiscsi
+
+```
+
+### checking with cinder 
+
+```
+799  kolla-ansible  -i /etc/kolla/multinode  prechecks --tags cinder
+  800  kolla-ansible  -i /etc/kolla/multinode  prechecks --tags iscsi
+  801  kolla-ansible  -i /etc/kolla/multinode  prechecks 
+  802  kolla-ansible  -i /etc/kolla/multinode deploy --tags cinder 
+  803  kolla-ansible  -i /etc/kolla/multinode reconfigure --tags cinder 
+
+```
+
