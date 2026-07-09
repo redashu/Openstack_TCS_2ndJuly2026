@@ -33,3 +33,36 @@ apache-error.log   nova-api-error.log   nova-conductor.log  nova-metadata-access
 
 <img src="vmtr1.png">
 
+### Introduction to storage service in openstack 
+
+<img src="st1.png">
+
+
+### cinder setup process
+
+```
+lsblk 
+NAME                                            MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
+loop0                                             7:0    0  63.9M  1 loop /snap/core20/2318
+loop1                                             7:1    0  63.8M  1 loop /snap/core20/2866
+loop2                                             7:2    0  91.7M  1 loop /snap/lxd/38800
+loop3                                             7:3    0 115.1M  1 loop /snap/lxd/40115
+loop4                                             7:4    0  38.8M  1 loop /snap/snapd/21759
+loop5                                             7:5    0    74M  1 loop /snap/core22/2411
+loop6                                             7:6    0  50.1M  1 loop /snap/snapd/27406
+sda                                               8:0    0   100G  0 disk 
+├─sda1                                            8:1    0     1M  0 part 
+├─sda2                                            8:2    0     2G  0 part /boot
+└─sda3                                            8:3    0    98G  0 part 
+  └─ubuntu--vg-ubuntu--lv                       253:2    0    49G  0 lvm  /
+sdb                                               8:16   0   100G  0 disk 
+
+```
+### installing on node3
+
+```
+sudo apt install lvm2  thin-provisioning-tools  open-iscsi -y 
+===>
+
+pvcreate   /dev/sdb  ;  vgcreate  cinder-volumes  /dev/sdb ;  vgchange  -ay cinder-volumes 
+```
