@@ -66,3 +66,40 @@ sudo apt install lvm2  thin-provisioning-tools  open-iscsi -y
 
 pvcreate   /dev/sdb  ;  vgcreate  cinder-volumes  /dev/sdb ;  vgchange  -ay cinder-volumes 
 ```
+
+### adding more pre-requisite 
+
+```
+ot@node3:~# vgs
+  VG             #PV #LV #SN Attr   VSize    VFree 
+  cinder-volumes   1   1   0 wz--n- <100.00g <4.81g
+  ubuntu-vg        1   1   0 wz--n-  <98.00g 49.00g
+root@node3:~# pvs
+  PV         VG             Fmt  Attr PSize    PFree 
+  /dev/sda3  ubuntu-vg      lvm2 a--   <98.00g 49.00g
+  /dev/sdb   cinder-volumes lvm2 a--  <100.00g <4.81g
+root@node3:~# 
+root@node3:~# mount  | grep -i config
+configfs on /sys/kernel/config type configfs (rw,nosuid,nodev,noexec,relatime)
+root@node3:~# 
+root@node3:~# lsmod  | grep -i target
+target_core_mod       405504  0
+root@node3:~# 
+root@node3:~# modprobe target_core_mod
+root@node3:~# modprobe iscsi_target_mod
+root@node3:~# lsmod  | grep -i target
+iscsi_target_mod      323584  0
+target_core_mod       405504  1 iscsi_target_mod
+root@node3:~# targetcli ls
+o- / ......................................................................................................................... [...]
+  o- backstores .............................................................................................................. [...]
+  | o- block .................................................................................................. [Storage Objects: 0]
+  | o- fileio ................................................................................................. [Storage Objects: 0]
+  | o- pscsi .................................................................................................. [Storage Objects: 0]
+  | o- ramdisk ................................................................................................ [Storage Objects: 0]
+  o- iscsi ............................................................................................................ [Targets: 0]
+  o- loopback ......................................................................................................... [Targets: 0]
+  o- vhost ..............................
+
+```
+
