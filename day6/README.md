@@ -151,3 +151,15 @@ ource /etc/kolla/admin-openrc.sh
 | c810968d45b44fa7a8c65fc9cc591ec6 | cinderv3  | volumev3       |
 ```
 
+
+### ansible to upload glace image 
+
+```
+ ansible-galaxy  collection install  openstack.cloud
+  855  ansible-playbook  glance-playbook.yaml 
+  856  vim glance-playbook.yaml 
+  857  ansible-playbook  glance-playbook.yaml 
+  858  openstack image list
+
+```
+

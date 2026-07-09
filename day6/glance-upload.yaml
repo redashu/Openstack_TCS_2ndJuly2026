@@ -1,0 +1,25 @@
+---
+- name: uploading glance image 
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  tasks:
+    - name: Upload image to glance
+      openstack.cloud.image:
+       name: ashu-ansible-image
+       state: present
+       filename: ./jammy-server-cloudimg-amd64-disk-kvm.img
+       disk_format: raw
+       container_format: bare
+       visibility: public
+       properties:
+         os_type: linux
+         architecture: x86_64
+       wait: true
+
+      register: image_result  
+      
+    - name: show image result
+      debug:
+       var: image_result.image
+      
